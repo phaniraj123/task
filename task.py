@@ -16,10 +16,49 @@ Original file is located at
 # import json
 # import pandas as pd
 
-jira=JIRA("http://phaniraj123.atlassian.net",basic_auth=("vempati.phaniraj123@gmail.com","ATATT3xFfGF0eS8BlU_3TiGP7rwfIVFFKz_Q0HQ4Pr7Wfo5Y0vniPoPTCw1_8ouot8ruJIYUP5V4ysUyiX99hENeuBiFI-cjjfyvFEt7ybZ0w6dbVC610DpQp2Ev7RwIIqPsdF2crqswWecdi0rBU2-n2OtGyGVJSdCFjjxoysxgRvdZWo9zjtM=38C705D1"))
+jira=JIRA("http://phaniraj123.atlassian.net",basic_auth=("vempati.phaniraj123@gmail.com","ATATT3xFfGF0WAfdxLwAXw7Kf1fZRmW17TV90dZqR3frjCdKUYzrRe33zPTg8RyCTIMgR_L1trphBsJS43Xjkot9xOmnRJ4-KL6-S9zrSWkJyCbojss4XpuBMGoXxxMGNTIOxu8Ka57iODqzdM3892D4f_e9bnHApVw34u77RX9HbsCQi-tbCbo=43712C61"))
 
 project="test"
 issue=jira.search_issues("project="+project)
-
+print(issue)
 for i in issue:
   print(i.key)
+
+import requests
+
+JIRA_URL = 'https://phaniraj123.atlassian.net'
+USERNAME = 'phaniraj123'
+PASSWORD = 'ATATT3xFfGF0eS8BlU_3TiGP7rwfIVFFKz_Q0HQ4Pr7Wfo5Y0vniPoPTCw1_8ouot8ruJIYUP5V4ysUyiX99hENeuBiFI-cjjfyvFEt7ybZ0w6dbVC610DpQp2Ev7RwIIqPsdF2crqswWecdi0rBU2-n2OtGyGVJSdCFjjxoysxgRvdZWo9zjtM=38C705D1'
+
+issue_data = {
+    "fields": {
+        "project": {
+            "key": "PROJ"  # Replace PROJECT_KEY with the key of your Jira project
+        },
+        "summary": "Issue Summary",
+        "description": "Issue Description",
+        "issuetype": {
+            "name": "Task"  # Replace "Bug" with the desired issue type (e.g., Task, Story, etc.)
+        }
+    }
+}
+
+def create_issue(issue_data):
+    create_issue_url = f"{JIRA_URL}/rest/api/2/issue/"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    auth = (USERNAME, PASSWORD)
+
+    response = requests.post(create_issue_url, json=issue_data, headers=headers, auth=auth)
+
+    if response.status_code == 201:
+        print("Issue created successfully.")
+        return response.json()
+    else:
+        print("Failed to create issue.")
+        print(response.text)
+        return None
+
+# Call the function to create the issue
+created_issue = create_issue(issue_data)
